@@ -1,5 +1,5 @@
 import React from 'react'
-import imageUpload from './assets/image-upload.svg'
+import imageUpload from '../assets/image-upload.svg'
 
 const FileUpload = () => {
   return (
