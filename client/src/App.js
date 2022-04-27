@@ -1,8 +1,10 @@
+import FileUpload from "./components/FileUpload";
 
 function App() {
   return (
-    <div className="App">
-    </div>
+    <main className="App bg-light-grayish-blue w-full h-screen relative flex items-center justify-center">
+      <FileUpload/>
+    </main>
   );
 }
 
