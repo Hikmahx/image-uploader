@@ -3,38 +3,30 @@ import imageUpload from "../assets/image-upload.svg";
 import axios from "axios";
 
 const FileUpload = () => {
-  // const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Drag & Drop your image here");
-  const [UploadedFile, setUploadedFile] = useState({});
+  const [uploadedFile, setUploadedFile] = useState({});
 
   const onChange = async (e) => {
-    // setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
     e.preventDefault();
-    // };
-
-    // const onSubmit = async (e) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
+
     console.log("form submitted");
 
     try {
-      const res = await axios.post("/upload/",
-      formData,
-       {
+      const res = await axios.post("/upload/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-        }
+        },
       });
- 
-      const {fileName, filePath} = await res.data;
 
-      setUploadedFile({fileName, filePath});
-
+      setUploadedFile(res.data);
+      setFilename(e.target.files[0].name);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   };
+
   return (
     <div className="bg-white w-full max-w-xl px-8 py-9 m-4 min-h-xl flex flex-col items-center rounded-xl shadow-xl">
       <div className="w-full">
@@ -50,18 +42,15 @@ const FileUpload = () => {
             <div className="text-light-gray text-xs">{filename}</div>
           </div>
           <div className="text-light-gray m-6 text-xs">Or</div>
-          <div
-            className=
-            "bg-blue text-white px-4 h-8 relative rounded-md text-xs flex items-center justify-center cursor-pointer hover:border-blue hover:border-1 hover:bg-white hover:text-blue transition-all"
-          >
+          <div className="bg-blue text-white px-4 h-8 relative rounded-md text-xs flex items-center justify-center cursor-pointer hover:border-blue hover:border-1 hover:bg-white hover:text-blue transition-all">
             <p className="m-auto">Choose a file</p>
-          <input
-            type="file"
-            name="file"
-            className="opacity-0 absolute inset-0 cursor-pointer"
-            id="fileUpload"
-            onChange={onChange}
-          />
+            <input
+              type="file"
+              name="file"
+              className="opacity-0 absolute inset-0 cursor-pointer"
+              id="fileUpload"
+              onChange={onChange}
+            />
           </div>
         </div>
       </div>
