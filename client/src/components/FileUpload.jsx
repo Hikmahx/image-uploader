@@ -19,15 +19,15 @@ const FileUpload = () => {
     console.log("form submitted");
 
     try {
-      const res = await fetch("/upload/", {
-        method: "POST",
+      const res = await axios.post("/upload/",
+      formData,
+       {
         headers: {
-          "encType": "multipart/form-data",
-        },
-        body: formData
+          "Content-Type": "multipart/form-data",
+        }
       });
  
-      const {fileName, filePath} = await res.json();
+      const {fileName, filePath} = await res.data;
 
       setUploadedFile({fileName, filePath});
 
