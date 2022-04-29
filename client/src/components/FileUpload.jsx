@@ -1,32 +1,12 @@
-import React, { useState } from "react";
+import React, {useContext} from "react";
 import imageUpload from "../assets/image-upload.svg";
-import axios from "axios";
+import UploadContext from "../context/UploadContext";
 
 const FileUpload = () => {
-  const [filename, setFilename] = useState("Drag & Drop your image here");
-  const [uploadedFile, setUploadedFile] = useState({});
 
-  const onChange = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
+  const {filename, uploadedFile, onChange} = useContext(UploadContext)
 
-    console.log("form submitted");
-
-    try {
-      const res = await axios.post("/upload/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      setUploadedFile(res.data);
-      setFilename(e.target.files[0].name);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+  
   return (
     <div className="bg-white w-full max-w-xl px-8 py-9 m-4 min-h-xl flex flex-col items-center rounded-xl shadow-xl">
       <div className="w-full">
