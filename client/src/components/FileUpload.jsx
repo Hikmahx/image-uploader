@@ -1,33 +1,72 @@
-import React from 'react'
-import imageUpload from '../assets/image-upload.svg'
+import React, { useState } from "react";
+import imageUpload from "../assets/image-upload.svg";
+import axios from "axios";
 
 const FileUpload = () => {
+  // const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Drag & Drop your image here");
+  const [UploadedFile, setUploadedFile] = useState({});
+
+  const onChange = async (e) => {
+    // setFile(e.target.files[0]);
+    setFilename(e.target.files[0].name);
+    e.preventDefault();
+    // };
+
+    // const onSubmit = async (e) => {
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    console.log("form submitted");
+
+    try {
+      const res = await fetch("/upload/", {
+        method: "POST",
+        headers: {
+          "encType": "multipart/form-data",
+        },
+        body: formData
+      });
+ 
+      const {fileName, filePath} = await res.json();
+
+      setUploadedFile({fileName, filePath});
+
+    } catch (err) {
+      console.log(err)
+    }
+  };
   return (
     <div className="bg-white w-full max-w-xl px-8 py-9 m-4 min-h-xl flex flex-col items-center rounded-xl shadow-xl">
-    <form className="w-full">
-      <div className="upload-wrapper flex flex-col items-center">
-        <h1 className="text-dark-gray text-lg mb-4">
-          Upload your image
-        </h1>
-        <h2 className="text-xs text-gray mb-6">
-          File should be Jpeg, Png,...
-        </h2>
-        <div className="w-full h-56 p-6 rounded-lg bg-grayish-blue border-2 border-dashed border-pale-blue-border flex flex-col items-center">
-          <div className="img-wrapper w-2/5 mb-5">
-            <img src={imageUpload} alt="upload" className="w-full" />
+      <div className="w-full">
+        <div className="upload-wrapper flex flex-col items-center">
+          <h1 className="text-dark-gray text-lg mb-4">Upload your image</h1>
+          <h2 className="text-xs text-gray mb-6">
+            File should be Jpeg, Png,...
+          </h2>
+          <div className="w-full h-56 p-6 rounded-lg bg-grayish-blue border-2 border-dashed border-pale-blue-border flex flex-col items-center">
+            <div className="img-wrapper w-2/5 mb-5">
+              <img src={imageUpload} alt="upload" className="w-full" />
+            </div>
+            <div className="text-light-gray text-xs">{filename}</div>
           </div>
-          <div className="text-light-gray text-xs">
-            Drag & Drop yout image here
+          <div className="text-light-gray m-6 text-xs">Or</div>
+          <div
+            className=
+            "bg-blue text-white px-4 h-8 relative rounded-md text-xs flex items-center justify-center cursor-pointer hover:border-blue hover:border-1 hover:bg-white hover:text-blue transition-all"
+          >
+            <p className="m-auto">Choose a file</p>
+          <input
+            type="file"
+            name="file"
+            className="opacity-0 absolute inset-0 cursor-pointer"
+            id="fileUpload"
+            onChange={onChange}
+          />
           </div>
         </div>
-        <div className="text-light-gray m-6 text-xs">
-          Or
-        </div>
-        <button className="bg-blue text-white px-4 h-8 rounded-md text-xs hover:border-blue hover:border-1 hover:bg-white hover:text-blue transition-all">Choose a file</button>
       </div>
-    </form>
     </div>
-  )
-}
+  );
+};
 
-export default FileUpload
+export default FileUpload;
