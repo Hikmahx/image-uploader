@@ -1,13 +1,20 @@
 
-import { createContext, useState } from "react";
+import { createContext, useReducer } from "react";
 import axios from "axios";
+import UploadReducer from "./UploadReducer";
 
 
 const UploadContext = createContext();
 
 export const UploadProvider = ({ children }) => {
-    const [filename, setFilename] = useState("Drag & Drop your image here");
-    const [uploadedFile, setUploadedFile] = useState({});
+
+    const initialState = {
+      uploadedFile: {},
+      filename: "Drag & Drop your image here",
+    };
+
+    const [state, dispatch] = useReducer(UploadReducer, initialState)
+
 
     const onChange = async (e) => {
       e.preventDefault();
@@ -23,8 +30,15 @@ export const UploadProvider = ({ children }) => {
           },
         });
 
-        setUploadedFile(res.data);
-        setFilename(e.target.files[0].name);
+        dispatch({
+          type: 'UPLOAD_FILE',
+          payload: res.data
+        })
+
+        dispatch({
+          type: "SET_FILENAME",
+          payload: e.target.files[0].name,
+        });
       } catch (err) {
         console.log(err);
       }
@@ -33,8 +47,8 @@ export const UploadProvider = ({ children }) => {
 
   return (
     <UploadContext.Provider value={{
-      filename,
-      uploadedFile,
+      filename: state.filename,
+      uploadedFile: state.uploadedFile,
       onChange
     }}>
       {children}
