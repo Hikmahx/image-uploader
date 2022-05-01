@@ -4,7 +4,7 @@ import UploadContext from "../context/UploadContext";
 import Dropzone from "react-dropzone";
 
 const FileUpload = () => {
-  const { filename, uploadedFile, onChange } = useContext(UploadContext);
+  const { filename, uploadedFile, onChange, onDrop } = useContext(UploadContext);
 
   return (
     <div className="bg-white w-full max-w-xl px-8 py-9 m-4 min-h-xl flex flex-col items-center rounded-xl shadow-xl">
@@ -16,7 +16,7 @@ const FileUpload = () => {
           </h2>
           <Dropzone
             multiple={false}
-            onDrop={(acceptedFiles) => console.log(acceptedFiles[0])}
+            onDrop={onDrop}
           >
             {({ getRootProps, getInputProps }) => (
               <div

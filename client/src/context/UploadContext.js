@@ -15,46 +15,55 @@ export const UploadProvider = ({ children }) => {
 
     const [state, dispatch] = useReducer(UploadReducer, initialState)
 
+  const onChange = (e) => {
+    e.preventDefault();
 
-    const onChange = async (e) => {
-      e.preventDefault();
-      const formData = new FormData();
-      formData.append("file", e.target.files[0]);
+    fileUpload(e.target.files[0]);
+  };
 
-      console.log("form submitted");
+  const onDrop = (acceptedFiles) => {
+    fileUpload(acceptedFiles[0])
+  };
 
-      try {
-        const res = await axios.post("/upload/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+  const fileUpload = async (fileItem) => {
+    const formData = new FormData();
+    formData.append("file", fileItem);
 
-        dispatch({
-          type: 'UPLOAD_FILE',
-          payload: res.data
-        })
+    console.log("form submitted");
 
-        dispatch({
-          type: "SET_FILENAME",
-          payload: e.target.files[0].name,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    try {
+      const res = await axios.post("/upload/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
+      dispatch({
+        type: "UPLOAD_FILE",
+        payload: res.data,
+      });
+
+      dispatch({
+        type: "SET_FILENAME",
+        payload: fileItem.name,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <UploadContext.Provider value={{
-      filename: state.filename,
-      uploadedFile: state.uploadedFile,
-      onChange
-    }}>
+    <UploadContext.Provider
+      value={{
+        filename: state.filename,
+        uploadedFile: state.uploadedFile,
+        onChange,
+        onDrop,
+      }}
+    >
       {children}
     </UploadContext.Provider>
-  ) 
-}
+  );
+};
 
-export default UploadContext
-
+export default UploadContext;
