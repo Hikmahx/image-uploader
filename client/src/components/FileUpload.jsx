@@ -4,7 +4,7 @@ import UploadContext from "../context/UploadContext";
 import Dropzone from "react-dropzone";
 
 const FileUpload = () => {
-  const { filename, uploadedFile, onChange, onDrop } = useContext(UploadContext);
+  const { filename, uploadedFile, onChange, onDrop, onDragEnter, onDragLeave, dragOver } = useContext(UploadContext);
 
   return (
     <div className="bg-white w-full max-w-xl px-8 py-9 m-4 min-h-xl flex flex-col items-center rounded-xl shadow-xl">
@@ -17,12 +17,15 @@ const FileUpload = () => {
           <Dropzone
             multiple={false}
             onDrop={onDrop}
+            onDragEnter={onDragEnter}
+            onDragLeave={onDragLeave}
           >
             {({ getRootProps, getInputProps }) => (
               <div
                 {...getRootProps({
                   className:
-                    "w-full h-56 p-6 rounded-lg bg-grayish-blue border-2 border-dashed border-pale-blue-border flex flex-col items-center realtive",
+                    "w-full h-56 p-6 rounded-lg bg-grayish-blue border-2 border-dashed border-pale-blue-border flex flex-col items-center realtive " +
+                      (dragOver && "!border-solid opacity-70"),
                 })}
               >
                 <input {...getInputProps()} />

@@ -11,6 +11,7 @@ export const UploadProvider = ({ children }) => {
     const initialState = {
       uploadedFile: {},
       filename: "Drag & Drop your image here",
+      dragOver: false
     };
 
     const [state, dispatch] = useReducer(UploadReducer, initialState)
@@ -47,18 +48,40 @@ export const UploadProvider = ({ children }) => {
         type: "SET_FILENAME",
         payload: fileItem.name,
       });
+      dispatch({
+        type: "DRAG_LEAVE",
+      });
     } catch (err) {
       console.log(err);
     }
   };
+
+  const onDragEnter = (e)=>{
+    if(e.target.getAttribute("role") === "button"){
+      dispatch({
+        type: "DRAG_OVER"
+      })
+    }
+  }
+
+    const onDragLeave = (e) => {
+      if(e.target.getAttribute("role") === "button"){
+        dispatch({
+          type: "DRAG_LEAVE"
+        });
+      }  
+    };
 
   return (
     <UploadContext.Provider
       value={{
         filename: state.filename,
         uploadedFile: state.uploadedFile,
+        dragOver: state.dragOver,
         onChange,
         onDrop,
+        onDragEnter,
+        onDragLeave
       }}
     >
       {children}
